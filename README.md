@@ -1,4 +1,4 @@
-![REST Assured](rest-assured-logo-green.png)
+![REST Assured JSON Schema Validation Demo](rest-assured-logo-green.png)
 
 [![Build Status](https://travis-ci.org/rest-assured/rest-assured.svg)](https://travis-ci.org/rest-assured/rest-assured)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.rest-assured/rest-assured/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.rest-assured/rest-assured)
@@ -16,63 +16,6 @@ languages into the Java domain.
 * 2019-09-06: Johan elaborates on some of the benefits of using the new [Kotlin API](https://github.com/rest-assured/rest-assured/wiki/Usage#kotlin-extension-module) in [this](http://code.haleby.se/2019/09/06/rest-assured-in-kotlin/) blog post. 
 
 [Older News](https://github.com/rest-assured/rest-assured/wiki/OldNews)
-
-
-## Examples
-Here's an example of how to make a GET request and validate the JSON or XML response:
-
-```java
-get("/lotto").then().assertThat().body("lotto.lottoId", equalTo(5));
-```
-
-Get and verify all winner ids:
-
-```java
-get("/lotto").then().assertThat().body("lotto.winners.winnerId", hasItems(23, 54));
-```
-
-Using parameters:
-
-```java
-given().
-    param("key1", "value1").
-    param("key2", "value2").
-when().
-    post("/somewhere").
-then().
-    body(containsString("OK"));
-```
-
-Using X-Path (XML only):
-
-```java
-given().
-    params("firstName", "John", "lastName", "Doe").
-when().
-    post("/greetMe").
-then().
-    body(hasXPath("/greeting/firstName[text()='John']")).
-```
-
-Need authentication? REST Assured provides several authentication mechanisms:
-
-```java
-given().auth().basic(username, password).when().get("/secured").then().statusCode(200);
-```
-
-Getting and parsing a response body:
-
-```java
-// Example with JsonPath
-String json = get("/lotto").asString();
-List<String> winnderIds = from(json).get("lotto.winners.winnerId");
-    
-// Example with XmlPath
-String xml = post("/shopping").andReturn().body().asString();
-Node category = from(xml).get("shopping.category[0]");
-```
-
-REST Assured supports any HTTP method but has explicit support for *POST*, *GET*, *PUT*, *DELETE*, *OPTIONS*, *PATCH* and *HEAD* and includes specifying and validating e.g. parameters, headers, cookies and body easily.
 
 
 ## Documentation
