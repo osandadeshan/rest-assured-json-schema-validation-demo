@@ -36,4 +36,4 @@ public class UserTest {
 
 }
 ```
-**Note: `user-details.json` should be located in `\target\classes` **
+**Note: `user-details.json` should be located in `\target\classes`**
