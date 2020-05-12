@@ -1,40 +1,39 @@
-![REST Assured JSON Schema Validation Demo](rest-assured-logo-green.png)
+# REST Assured JSON Schema Validation Demo
 
-[![Build Status](https://travis-ci.org/rest-assured/rest-assured.svg)](https://travis-ci.org/rest-assured/rest-assured)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.rest-assured/rest-assured/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.rest-assured/rest-assured)
-[![Javadoc](https://javadoc-badge.appspot.com/io.rest-assured/rest-assured.svg)](http://www.javadoc.io/doc/io.rest-assured/rest-assured)
+### Introduction
+When exposing REST or HTTP based service APIs it’s important to validate that the API behaves correctly and that the exposed data format is structured in an expected manner. Using REST Assured it has always been easy to validate that the API behaves correctly and returns the expected data values. Validating that the structure of the document is correct has also been easy when it comes to JSON.
+
+### Example
+```
+public class UserTest {
+
+    private static final String BASE_URI = "https://maxsoft-mock-server-demo.web.app/";
+
+    @Test
+    public void validateUserDetailsJsonSchema() {
+        ValidatableResponse response = given()
+                .contentType(ContentType.JSON)
+                .accept(ContentType.JSON)
+                .baseUri(BASE_URI)
+                .when()
+                .get("users/1")
+                .then();
+
+        System.out.println("GET Response:\n" + response.extract().body().asString());
+
+        // Validation for the status code
+        Assert.assertEquals(response.extract().statusCode(), 200);
+
+        // Validation for the JSON Schema
+        assertThat(response.extract().asString(), matchesJsonSchemaInClasspath("user-details.json"));
+
+        // Validations for the response attributes
+        assertNotNull("'userId' should not be null", response.extract().body().jsonPath().get("userId"));
+        assertNotNull("'name' should not be null", response.extract().body().jsonPath().get("name"));
+        assertNotNull("'email' should not be null", response.extract().body().jsonPath().get("email"));
+    }
 
 
-Testing and validation of REST services in Java is harder than in dynamic languages 
-such as Ruby and Groovy. REST Assured brings the simplicity of using these 
-languages into the Java domain.
-
-
-## News 
-* 2020-01-17: REST Assured [4.2.0](http://dl.bintray.com/johanhaleby/generic/rest-assured-4.2.0-dist.zip) is released. It adds a module bringing [Kotlin extension functions](https://github.com/rest-assured/rest-assured/wiki/Usage#kotlin-extension-module-for-spring-mockmvc) to [Spring Mock Mvc](https://github.com/rest-assured/rest-assured/wiki/Usage#spring-mock-mvc-module), support for Jakarta EE JSON Binding (JSON-B) specification using  Eclipse Yasson, as well as [blacklisting](https://github.com/rest-assured/rest-assured/wiki/Usage#blacklist-headers-from-logging) headers from being logged and other improvements. See [release notes](https://github.com/rest-assured/rest-assured/wiki/ReleaseNotes42) and [change log](https://raw.githubusercontent.com/rest-assured/rest-assured/master/changelog.txt) for more details.
-* 2019-10-02: REST Assured [4.1.2](http://dl.bintray.com/johanhaleby/generic/rest-assured-4.1.2-dist.zip) is released. It adds support for Java 13 as well as fixing some issues with the [kotlin extension module](https://github.com/rest-assured/rest-assured/wiki/Usage#kotlin-extension-module). Please see [change log](https://raw.githubusercontent.com/rest-assured/rest-assured/master/changelog.txt) for details.
-* 2019-09-06: Johan elaborates on some of the benefits of using the new [Kotlin API](https://github.com/rest-assured/rest-assured/wiki/Usage#kotlin-extension-module) in [this](http://code.haleby.se/2019/09/06/rest-assured-in-kotlin/) blog post. 
-
-[Older News](https://github.com/rest-assured/rest-assured/wiki/OldNews)
-
-
-## Documentation
-
-* [Getting started](https://github.com/rest-assured/rest-assured/wiki/GettingStarted)
-* [Downloads](https://github.com/rest-assured/rest-assured/wiki/Downloads)
-* [Usage Guide](https://github.com/rest-assured/rest-assured/wiki/Usage) (click [here](https://github.com/rest-assured/rest-assured/wiki/Usage_Legacy) for legacy documentation)
-* [Javadoc](http://www.javadoc.io/doc/io.rest-assured/rest-assured/4.2.0)
-* [Rest Assured Javadoc](http://static.javadoc.io/io.rest-assured/rest-assured/4.2.0/io/restassured/RestAssured.html)
-* [Rest AssuredMockMvc Javadoc](http://static.javadoc.io/io.rest-assured/spring-mock-mvc/4.1.0/io/restassured/module/mockmvc/RestAssuredMockMvc.html)
-* [XmlPath Javadoc](http://static.javadoc.io/io.rest-assured/xml-path/4.2.0/io/restassured/path/xml/XmlPath.html)
-* [JsonPath Javadoc](http://static.javadoc.io/io.rest-assured/json-path/4.2.0/io/restassured/path/json/JsonPath.html)
-* [Release Notes](https://github.com/rest-assured/rest-assured/wiki/ReleaseNotes)
-* [FAQ](https://github.com/rest-assured/rest-assured/wiki/FAQ)
-
-## Support and discussion
-Join the mailing list at our [Google group](http://groups.google.com/group/rest-assured). 
-
-## Links
-* [Change log](https://github.com/rest-assured/rest-assured/raw/master/changelog.txt)
-* REST Assured on [openhub](https://www.openhub.net/p/rest-assured)
-* [Mailing list](http://groups.google.com/group/rest-assured) for questions and support
+}
+```
+**Note: `user-details.json` should be located in `\target\classes` **
