@@ -7,7 +7,7 @@ When exposing REST or HTTP based service APIs it’s important to validate that 
 ```
 public class UserTest {
 
-    private static final String BASE_URI = "https://maxsoft-mock-server-demo.web.app/";
+    private static final String BASE_URI = "https://gorest.co.in/public-api/";
 
     @Test
     public void validateUserDetailsJsonSchema() {
@@ -16,24 +16,22 @@ public class UserTest {
                 .accept(ContentType.JSON)
                 .baseUri(BASE_URI)
                 .when()
-                .get("users/1")
+                .get("users/2")
                 .then();
 
         System.out.println("GET Response:\n" + response.extract().body().asString());
 
-        // Validation for the status code
+        // Verify the status code
         Assert.assertEquals(response.extract().statusCode(), 200);
 
-        // Validation for the JSON Schema
-        assertThat(response.extract().asString(), matchesJsonSchemaInClasspath("user-details.json"));
+        // Verify the response attributes
+        assertNotNull("'id' should not be null", response.extract().body().jsonPath().get("data.id"));
+        assertNotNull("'name' should not be null", response.extract().body().jsonPath().get("data.name"));
+        assertNotNull("'email' should not be null", response.extract().body().jsonPath().get("data.email"));
 
-        // Validations for the response attributes
-        assertNotNull("'userId' should not be null", response.extract().body().jsonPath().get("userId"));
-        assertNotNull("'name' should not be null", response.extract().body().jsonPath().get("name"));
-        assertNotNull("'email' should not be null", response.extract().body().jsonPath().get("email"));
+        // Validate the JSON Schema
+        assertThat(response.extract().body().asString(), matchesJsonSchemaInClasspath("user-info.json"));
     }
-
-
 }
 ```
-**Note: `user-details.json` should be located in `\target\classes`**
+**Note: `user-info.json` should be located in `src/test/resources`**
